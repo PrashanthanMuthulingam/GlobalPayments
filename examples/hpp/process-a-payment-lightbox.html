@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HPP Lightbox Demo</title>
+    <meta charset="UTF-8">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="./../../dist/rxp-js.js"></script>
+    <script src="./helper.js"></script>
+    <script>
+ 	    $(document).ready(function () {
+            $('#paymentForm').on('submit', function(e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+
+                $.post("proxy-request.php", formData, function (jsonFromServerSdk) {
+                    RealexHpp.lightbox.init(
+                        "paymentForm",
+                        "./response.php", // merchant url
+                        jsonFromServerSdk   // form data from server
+                    );
+					        $('body').addClass('loaded');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<form id="paymentForm" method="post">
+    <div class="method">
+	<input type="text" name="amount" placeholder="Amount" required>
+        <label for="paymentMethod">Payment Method: </label>
+        <select name="paymentMethod" id="paymentMethod">
+            <option value="https://pay.sandbox.realexpayments.com/pay">Ecommerce</option>
+            <option value="https://apis.sandbox.globalpay.com/ucp/hpp/transactions">Unified Payments</option>
+        </select>
+    </div>
+    <input type="submit" id="payButtonId" value="Checkout Now" />
+	</form>
+</body>
+</html>
